@@ -1,5 +1,6 @@
 #ifndef PERSONAGEM_H
 #define PERSONAGEM_H
+#define CAPACIDADE_ITENS 50
 #include <string.h>
 
 enum Raca{
@@ -19,7 +20,7 @@ enum Classe {
 
 typedef struct Personagem
 {  
-    int Capacidade;
+    int CapacidadeItens[CAPACIDADE_ITENS];
     int ID;
     char nome[50];    
     enum Raca raca;
@@ -33,11 +34,16 @@ typedef struct Personagem
     int Poder;
 
 }Personagem;
+typedef struct 
+{
+    int *local; 
+    int capacidadeAtual;
+}gerenciamento;
 
-void cadastrarPersonagem();
+
 void validaEnum();
-
-
+Personagem* iniciarPersonagem();
+Personagem cadastrarPersonagem(Personagem* personagem);
 
 
 
