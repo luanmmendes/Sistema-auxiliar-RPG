@@ -113,31 +113,31 @@ Personagem cadastrarPersonagem(Personagem *p){
     printf("digite um valor valido!");
     scanf("%d", &p->Poder);
   }
-  return *p;
 }
   
-gerenciamentoPersona* IniciarLista(int capacidade){
-        gerenciamentoPersona *lista = malloc(capacidade * sizeof(Personagem));
-        if (lista == NULL)
-        {
-          printf("erro");
-          return NULL;
-        }
-        lista->capacidadeAtual = 20;
-        lista->lista = NULL;
-        lista->info = NULL;
-        return lista;
-}
-int adicionarLista(gerenciamentoPersona *lista , Personagem *p,int capacidadeAtual){
-  if (capacidadeAtual < 0)
+void verificaID(Personagem *p){
+  for (size_t i = 1; i < 20; i++)
   {
-    printf("capacidade máxima atingida!");
+    if (p->ID == p[i-1].ID)
+    {
+      printf("Digite um ID diferente!");
+      while (p->ID == p[i-1].ID)
+      {
+        scanf("%d",&p->ID);
+      }
+    }
+  }    
+}
+
+int adicionarLista(Personagem *p,int* capacidadeAtual){
+  if (*capacidadeAtual < 0)
+  {
     return 1;
   }
   else {
-  lista->capacidadeAtual = capacidadeAtual-1;
-  lista->info = p;
-  lista->lista = lista++;
-  }
-  retu
+    p++;
+    *capacidadeAtual--;
+    verificaID(p);
+    return 0;
+  }z
 }

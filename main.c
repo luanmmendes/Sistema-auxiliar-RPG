@@ -12,14 +12,20 @@ int main(int argc, char const *argv[])
     menu();
     int valor;
     int capacidadeAtual = CAPACIDADE;
+    Personagem *p = iniciarPersonagem(CAPACIDADE);    
     scanf("%d", &valor);
-    gerenciamentoPersona *listaPersonagens = IniciarLista(capacidadeAtual);
     switch (valor)
     {
     case 1:
-        Personagem *p = iniciarPersonagem(CAPACIDADE);    
         cadastrarPersonagem(p);
-        adicionarLista(listaPersonagens,p,listaPersonagens->capacidadeAtual--);
+        if (adicionarLista(p,&capacidadeAtual) != 0)
+        {
+            printf("capacidade máxima atingida!");
+            return 1;
+        }
+        else{
+            adicionarLista(p,&capacidadeAtual);
+        }
         
 
         // printf("ID: %d\n",p->ID);
