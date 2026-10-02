@@ -40,9 +40,3 @@ int validaEnumRaca(char* texto){
   if(strcmp(texto,"HALFLING") == 0)return HALFLING;
   else return -1;
 }
-
-void IniciarLista(Personagem* p,int capacidadeAtual){
-  gerenciamentoPersona *lista;
-  lista->local = p;
-  lista->capacidadeAtual = capacidadeAtual;
-}

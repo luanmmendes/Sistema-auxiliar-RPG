@@ -34,16 +34,22 @@ typedef struct Personagem
     int Poder;
 
 }Personagem;
-typedef struct 
+
+typedef struct gerenciamentoPersona
 {
-    int *local; 
+    Personagem* lista;
+    Personagem* info;
     int capacidadeAtual;
-}gerenciamento;
+}gerenciamentoPersona;
 
 
 void validaEnum();
 Personagem* iniciarPersonagem();
 Personagem cadastrarPersonagem(Personagem* personagem);
+gerenciamentoPersona* IniciarLista(int capacidadeAtual);
+int adicionarLista(gerenciamentoPersona *lista , Personagem *p,int capacidadeAtual);
+
+
 
 
 

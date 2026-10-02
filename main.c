@@ -13,18 +13,19 @@ int main(int argc, char const *argv[])
     int valor;
     int capacidadeAtual = CAPACIDADE;
     scanf("%d", &valor);
+    gerenciamentoPersona *listaPersonagens = IniciarLista(capacidadeAtual);
     switch (valor)
     {
     case 1:
         Personagem *p = iniciarPersonagem(CAPACIDADE);    
         cadastrarPersonagem(p);
-        iniciarLista(p,capacidadeAtual-1);
-        p++;
+        adicionarLista(listaPersonagens,p,listaPersonagens->capacidadeAtual--);
+        
 
-        printf("ID: %d\n",p->ID);
-        printf("Nome: %s\n",p->nome);
-        printf("%d",&p->CapacidadeItens);
-        printf("Raca: %d\n",p->raca);
+        // printf("ID: %d\n",p->ID);
+        // printf("Nome: %s\n",p->nome);
+        // printf("%d",&p->CapacidadeItens[0]);
+        // printf("Raca: %d\n",p->raca);
         // printf("Classe %d",&p.classe);
         // printf("Nivel %d\n",&p.Nivel);
         // printf("HP %d\n",&p.HP);

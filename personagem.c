@@ -116,4 +116,28 @@ Personagem cadastrarPersonagem(Personagem *p){
   return *p;
 }
   
-
+gerenciamentoPersona* IniciarLista(int capacidade){
+        gerenciamentoPersona *lista = malloc(capacidade * sizeof(Personagem));
+        if (lista == NULL)
+        {
+          printf("erro");
+          return NULL;
+        }
+        lista->capacidadeAtual = 20;
+        lista->lista = NULL;
+        lista->info = NULL;
+        return lista;
+}
+int adicionarLista(gerenciamentoPersona *lista , Personagem *p,int capacidadeAtual){
+  if (capacidadeAtual < 0)
+  {
+    printf("capacidade máxima atingida!");
+    return 1;
+  }
+  else {
+  lista->capacidadeAtual = capacidadeAtual-1;
+  lista->info = p;
+  lista->lista = lista++;
+  }
+  retu
+}

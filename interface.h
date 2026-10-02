@@ -5,11 +5,5 @@ void menu();
 int validaEnumRaca();
 int validaEnumClasse();
 void limpaBuffer();
-void iniciarLista();
-typedef struct gerenciamentoPersona
-{
-    Personagem* local;
-    int capacidadeAtual;
-}gerenciamentoPersona;
 
 #endif
