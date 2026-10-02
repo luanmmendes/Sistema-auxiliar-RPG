@@ -26,13 +26,15 @@ Personagem cadastrarPersonagem(Personagem *p){
   
   printf("ID: ");
   scanf("%d",&p->ID);
-  limpaBuffer(); 
-  printf("Nome: ");
+  printf("%d", p->ID);
+  printf("Nome:");
   fgets(texto,sizeof(texto),stdin);
-  strcpy(p->nome,texto);
   limpaBuffer();
-  printf("Raca: ");
+  strcpy(p->nome,texto);
+  printf("Raca:");
   fgets(texto,sizeof(texto),stdin);
+  limpaBuffer();
+  limpaBarra(texto);
   verificaRaca = validaEnumRaca(texto);
   if (verificaRaca == -1)
   {
@@ -40,6 +42,7 @@ Personagem cadastrarPersonagem(Personagem *p){
   {
     printf("digite uma raca valida! (USE CAIXA ALTA)");
     fgets(texto,sizeof(texto),stdin);
+    limpaBuffer();
     i = strlen(texto);
     if (texto[i-1] == '\n')
     {
@@ -49,20 +52,20 @@ Personagem cadastrarPersonagem(Personagem *p){
     verificaRaca = validaEnumRaca(texto);
   }
   }
-  printf("Classe: ");
+  printf("Classe:");
   fgets(texto, sizeof(texto),stdin);
-  limpaBuffer();
   verificaClase = validaEnumClasse(texto);
   if (verificaClase == -1)
   {
-    while (verificaClase == -1)
+    while (verificaClase != 0) //QUEBRADO 
     {
-        printf("digite uma raca valida! (USE CAIXA ALTA)");
+        printf("digite uma classe valida! (USE CAIXA ALTA)");
         fgets(texto,sizeof(texto),stdin);
         verificaRaca = validaEnumRaca(texto);
-    } 
+    }      i = strlen(texto);
+
   }
-  printf("Nivel: ");
+  printf("Nivel:");
   scanf("%d",&p->Nivel);
   while (p->Nivel > 20 || p->Nivel < 1)
   { 
@@ -115,29 +118,19 @@ Personagem cadastrarPersonagem(Personagem *p){
   }
 }
   
-void verificaID(Personagem *p){
+void verificaID(Personagem *p,int* quantidade){
   for (size_t i = 1; i < 20; i++)
   {
-    if (p->ID == p[i-1].ID)
+    if (p->ID == p[*quantidade].ID)
     {
+      printf("a iteracao atual é %d\n",i);    
+      printf("o id anterior e %d e o atual e %d",p->ID,p[0].ID);
       printf("Digite um ID diferente!");
       while (p->ID == p[i-1].ID)
       {
         scanf("%d",&p->ID);
+        printf("%d", p->ID);
       }
     }
   }    
-}
-
-int adicionarLista(Personagem *p,int* capacidadeAtual){
-  if (*capacidadeAtual < 0)
-  {
-    return 1;
-  }
-  else {
-    p++;
-    *capacidadeAtual--;
-    verificaID(p);
-    return 0;
-  }z
 }

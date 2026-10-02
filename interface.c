@@ -40,3 +40,11 @@ int validaEnumRaca(char* texto){
   if(strcmp(texto,"HALFLING") == 0)return HALFLING;
   else return -1;
 }
+
+void limpaBarra(char* texto){
+    int i = strlen(texto);
+    if (texto[i-1] == '\n')
+    {
+      texto[i-1] = '\0';
+    }
+}

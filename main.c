@@ -13,19 +13,19 @@ int main(int argc, char const *argv[])
     int valor;
     int capacidadeAtual = CAPACIDADE;
     Personagem *p = iniciarPersonagem(CAPACIDADE);    
+    int quantidade = 0;
     scanf("%d", &valor);
     switch (valor)
     {
     case 1:
-        cadastrarPersonagem(p);
-        if (adicionarLista(p,&capacidadeAtual) != 0)
+        cadastrarPersonagem(&p[quantidade]);
+        quantidade++;
+        printf("%d", quantidade);
+        if (capacidadeAtual < 19)
         {
-            printf("capacidade máxima atingida!");
-            return 1;
+            verificaID;
         }
-        else{
-            adicionarLista(p,&capacidadeAtual);
-        }
+    
         
 
         // printf("ID: %d\n",p->ID);

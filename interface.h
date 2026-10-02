@@ -5,5 +5,5 @@ void menu();
 int validaEnumRaca();
 int validaEnumClasse();
 void limpaBuffer();
-
+void limpaBarra(char* texto);
 #endif

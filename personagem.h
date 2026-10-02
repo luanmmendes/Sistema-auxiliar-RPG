@@ -38,10 +38,9 @@ typedef struct Personagem
 
 
 void validaEnum();
-void verificaID(Personagem *p);
+void verificaID(Personagem *p,int *quantidade);
 Personagem* iniciarPersonagem();
 Personagem cadastrarPersonagem(Personagem* personagem);
-int adicionarLista(Personagem* p, int* capacidadeAtual);
 
 typedef struct gerenciamentoPersona
 {
