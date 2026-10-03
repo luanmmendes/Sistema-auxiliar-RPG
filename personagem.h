@@ -20,7 +20,7 @@ enum Classe {
 
 typedef struct Personagem
 {  
-    int CapacidadeItens[CAPACIDADE_ITENS];
+    int Itens[CAPACIDADE_ITENS];
     int ID;
     char nome[50];    
     enum Raca raca;
@@ -37,8 +37,7 @@ typedef struct Personagem
 
 
 
-void validaEnum();
-void verificaID(Personagem *p,int *quantidade);
+void verificaID(Personagem *p,int quantidade);
 Personagem* iniciarPersonagem();
 Personagem cadastrarPersonagem(Personagem* personagem);
 

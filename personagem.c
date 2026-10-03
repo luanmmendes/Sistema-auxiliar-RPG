@@ -5,9 +5,9 @@
 
 Personagem* iniciarPersonagem(int capacidadeMax){
    Personagem *personagem = malloc(capacidadeMax * sizeof(*personagem));
-    personagem->CapacidadeItens[capacidadeMax] = CAPACIDADE_ITENS;
+    personagem->Itens[0] = CAPACIDADE_ITENS;
     personagem->ID = 0;
-    personagem->nome[capacidadeMax] = 'x';
+    personagem->nome[0] = 'x';
     personagem->raca = 0;
     personagem->classe = 0;
     personagem->Nivel = 1;
@@ -24,16 +24,25 @@ Personagem cadastrarPersonagem(Personagem *p){
   int i,verificaRaca,verificaClase = 0;
   char texto[50];
   
-  printf("ID: ");
+  printf("ID:");
   scanf("%d",&p->ID);
+  if (p->ID < 0)
+  {
+    printf("o ID deve ser um inteiro positivo valido!\n");
+    while (p->ID < 0)
+    {
+      scanf("%d", &p->ID);
+    }
+  }
+  
   printf("%d", p->ID);
+  limpaBuffer();
   printf("Nome:");
   fgets(texto,sizeof(texto),stdin);
-  limpaBuffer();
+  limpaBarra(texto);
   strcpy(p->nome,texto);
   printf("Raca:");
   fgets(texto,sizeof(texto),stdin);
-  limpaBuffer();
   limpaBarra(texto);
   verificaRaca = validaEnumRaca(texto);
   if (verificaRaca == -1)
@@ -42,18 +51,13 @@ Personagem cadastrarPersonagem(Personagem *p){
   {
     printf("digite uma raca valida! (USE CAIXA ALTA)");
     fgets(texto,sizeof(texto),stdin);
-    limpaBuffer();
-    i = strlen(texto);
-    if (texto[i-1] == '\n')
-    {
-      texto[i-1] = '\0';
-    }
-    
+    limpaBuffer();    
     verificaRaca = validaEnumRaca(texto);
   }
   }
   printf("Classe:");
   fgets(texto, sizeof(texto),stdin);
+  limpaBarra(texto);
   verificaClase = validaEnumClasse(texto);
   if (verificaClase == -1)
   {
@@ -62,8 +66,7 @@ Personagem cadastrarPersonagem(Personagem *p){
         printf("digite uma classe valida! (USE CAIXA ALTA)");
         fgets(texto,sizeof(texto),stdin);
         verificaRaca = validaEnumRaca(texto);
-    }      i = strlen(texto);
-
+    }     
   }
   printf("Nivel:");
   scanf("%d",&p->Nivel);
@@ -116,21 +119,22 @@ Personagem cadastrarPersonagem(Personagem *p){
     printf("digite um valor valido!");
     scanf("%d", &p->Poder);
   }
+  return *p; 
 }
   
-void verificaID(Personagem *p,int* quantidade){
-  for (size_t i = 1; i < 20; i++)
+void verificaID(Personagem *p,int quantidade){
+ if(quantidade >=1){
+  for (int i = 1; i < quantidade; i++)
   {
-    if (p->ID == p[*quantidade].ID)
+    if (p[quantidade].ID == p[quantidade-1].ID)
     {
-      printf("a iteracao atual é %d\n",i);    
-      printf("o id anterior e %d e o atual e %d",p->ID,p[0].ID);
-      printf("Digite um ID diferente!");
-      while (p->ID == p[i-1].ID)
+      while (p[quantidade].ID == p[quantidade-1].ID)
       {
-        scanf("%d",&p->ID);
-        printf("%d", p->ID);
+        printf("Não é possível cadastrar personagens com IDs repetidos, digite outro id:\n");
+        scanf("%d",&p[quantidade].ID);
       }
+      
     }
-  }    
+  }
+}
 }
