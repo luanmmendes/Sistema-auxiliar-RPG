@@ -13,5 +13,7 @@ void listaID(Personagem *p,int ID);
 void listaPersonagens(Personagem *p,int quantidade);
 void printaEnum(Personagem *p);
 void printaRaca(Personagem *p);
+void printaClasse(Personagem *p);
+void exibeEquipamentosPersonagem(const Personagem *p);
 int interfaceInventario();
 #endif

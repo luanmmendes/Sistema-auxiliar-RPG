@@ -6,18 +6,23 @@
 Personagem *iniciarPersonagem(int capacidadeMax)
 {
   Personagem *personagem = malloc(capacidadeMax * sizeof(*personagem));
-  personagem->Itens[0] = CAPACIDADE_ITENS;
-  personagem->ID = 0;
-  personagem->nome[0] = 'x';
-  personagem->raca = 0;
-  personagem->classe = 0;
-  personagem->Nivel = 1;
-  personagem->HP = 999;
-  personagem->HPatual = 999;
-  personagem->Ataque = 15;
-  personagem->Defesa = 15;
-  personagem->Iniciativa = 15;
-  personagem->Poder = 10;
+  if (personagem == NULL) return NULL;
+  for (int i = 0; i < capacidadeMax; i++)
+  {
+    personagem[i].ID = 0;
+    personagem[i].nome[0] = '\0';
+    personagem[i].raca = HUMANO;
+    personagem[i].classe = GUERREIRO;
+    personagem[i].Nivel = 1;
+    personagem[i].HP = 100;
+    personagem[i].HPatual = 100;
+    personagem[i].Ataque = 10;
+    personagem[i].Defesa = 10;
+    personagem[i].Iniciativa = 10;
+    personagem[i].Poder = 10;
+    inicializarInventario(&personagem[i].inventario);
+    inicializarEquipamentos(&personagem[i].equipamentos);
+  }
   return personagem;
 }
 
@@ -49,25 +54,28 @@ Personagem cadastrarPersonagem(Personagem *p)
   {
     while (verificaRaca == -1)
     {
-      printf("digite uma raca valida! (USE CAIXA ALTA)");
+      printf("digite uma raca valida! (USE CAIXA ALTA): ");
       fgets(texto, sizeof(texto), stdin);
       limpaBarra(texto);
       verificaRaca = validaEnumRaca(texto);
     }
   }
+  p->raca = verificaRaca;
   printf("Classe:");
   fgets(texto, sizeof(texto), stdin);
   limpaBarra(texto);
   verificaClasse = validaEnumClasse(texto);
   if (verificaClasse == -1)
   {
-    while (verificaClasse != 0) // QUEBRADO
+    while (verificaClasse == -1)
     {
-      printf("digite uma classe valida! (USE CAIXA ALTA)");
+      printf("digite uma classe valida! (USE CAIXA ALTA): ");
       fgets(texto, sizeof(texto), stdin);
-      verificaRaca = validaEnumRaca(texto);
+      limpaBarra(texto);
+      verificaClasse = validaEnumClasse(texto);
     }
   }
+  p->classe = verificaClasse;
   printf("Nivel:");
   scanf("%d", &p->Nivel);
   while (p->Nivel > 20 || p->Nivel < 1)
@@ -119,55 +127,305 @@ Personagem cadastrarPersonagem(Personagem *p)
     printf("digite um valor valido!");
     scanf("%d", &p->Poder);
   }
+  inicializarInventario(&p->inventario);
+  inicializarEquipamentos(&p->equipamentos);
+  return *p;
 }
 
 void alterarPersonagem(Personagem *p, int id, int quantidade)
 {
-  for (int i = 0; i < 20; i++)
+  int achou = 0;
+  for (int i = 0; i < quantidade; i++)
   {
     if (p[i].ID == id)
     {
-      cadastrarPersonagem(p);
-      verificaID(p, quantidade);
-    }
-    else
-    {
-      printf("esse ID não existe!\n");
+      achou = 1;
+      printf("\n--- Digite os novos dados para o personagem ID %d ---\n", id);
+      cadastrarPersonagem(&p[i]);
+      p[i].ID = id;
+      printf("Personagem ID %d alterado com sucesso!\n", id);
       break;
     }
+  }
+  if (!achou)
+  {
+    printf("Personagem com ID %d nao existe!\n", id);
   }
 }
 
 void removerPersonagem(Personagem *p, int *quantidade, int id)
 {
+  int achou = 0;
   for (int i = 0; i < *quantidade; i++)
   {
     if (p[i].ID == id)
     {
+      achou = 1;
       for (int j = i; j < *quantidade - 1; j++)
       {
         p[j] = p[j + 1];
       }
-       (*quantidade)--;
+      (*quantidade)--;
+      printf("Personagem ID %d removido com sucesso!\n", id);
+      break;
+    }
+  }
+  if (!achou)
+  {
+    printf("Personagem com ID %d nao encontrado para remocao!\n", id);
+  }
+}
+
+void verificaID(Personagem *p, int quantidade)
+{
+  int repetido = 1;
+  while (repetido)
+  {
+    repetido = 0;
+    for (int i = 0; i < quantidade; i++)
+    {
+      if (p[i].ID == p[quantidade].ID)
+      {
+        printf("Nao e possivel cadastrar personagens com IDs repetidos! Digite outro ID: ");
+        scanf("%d", &p[quantidade].ID);
+        repetido = 1;
         break;
+      }
     }
   }
 }
 
-  void verificaID(Personagem * p, int quantidade)
+const char* nomeSlotEquipado(int slot)
+{
+  switch (slot)
   {
-    if (quantidade >= 1)
-    {
-      for (int i = 1; i < quantidade; i++)
+    case CABECA: return "Cabeca (Elmo)";
+    case PEITO: return "Peito (Peitoral)";
+    case BRACOS: return "Bracos (Manoplas)";
+    case PERNAS: return "Pernas (Calca)";
+    case PES: return "Pes (Botas)";
+    case MAO_DIREITA: return "Mao Direita";
+    case MAO_ESQUERDA: return "Mao Esquerda";
+    case ACESSORIO1: return "Acessorio 1";
+    case ACESSORIO2: return "Acessorio 2";
+    default: return "Desconhecido";
+  }
+}
+
+void inicializarEquipamentos(Equipamentos *eq)
+{
+  if (eq == NULL) return;
+  for (int i = 0; i < QTD_SLOTS_EQUIPAMENTO; i++)
+  {
+    eq->ocupado[i] = 0;
+  }
+  eq->armaDuasMaosEquipada = 0;
+}
+
+int equiparItem(Personagem *p, int idItem)
+{
+  if (p == NULL) return -1;
+
+  int pos = buscarItemInventario(&p->inventario, idItem);
+  if (pos == -1)
+  {
+    printf("Item com ID %d nao encontrado no inventario do personagem!\n", idItem);
+    return -1;
+  }
+
+  Item item = p->inventario.itens[pos];
+  int slotDestino = -1;
+
+  switch (item.categoria)
+  {
+    case ELMO: slotDestino = CABECA; break;
+    case PEITORAL: slotDestino = PEITO; break;
+    case MANOPLAS: slotDestino = BRACOS; break;
+    case CALCA: slotDestino = PERNAS; break;
+    case BOTAS: slotDestino = PES; break;
+    case ANEL:
+    case COLAR:
+    case CINTO:
+      if (!p->equipamentos.ocupado[ACESSORIO1]) slotDestino = ACESSORIO1;
+      else if (!p->equipamentos.ocupado[ACESSORIO2]) slotDestino = ACESSORIO2;
+      else slotDestino = ACESSORIO1;
+      break;
+    case ARMA_UMA_MAO:
+      if (p->equipamentos.armaDuasMaosEquipada)
       {
-        if (p[quantidade].ID == p[quantidade - 1].ID)
-        {
-          while (p[quantidade].ID == p[quantidade - 1].ID)
-          {
-            printf("Não é possível cadastrar personagens com IDs repetidos, digite outro id:\n");
-            scanf("%d", &p[quantidade].ID);
-          }
-        }
+        printf("Conflito: Ha uma arma de duas maos equipada! Desequipe-a primeiro.\n");
+        return -1;
       }
+      if (!p->equipamentos.ocupado[MAO_DIREITA]) slotDestino = MAO_DIREITA;
+      else if (!p->equipamentos.ocupado[MAO_ESQUERDA]) slotDestino = MAO_ESQUERDA;
+      else slotDestino = MAO_DIREITA;
+      break;
+    case ARMA_DUAS_MAOS:
+    {
+      int espacosNecessarios = (p->equipamentos.ocupado[MAO_DIREITA] ? p->equipamentos.itens[MAO_DIREITA].espacosGastos : 0) +
+                               ((p->equipamentos.ocupado[MAO_ESQUERDA] && !p->equipamentos.armaDuasMaosEquipada) ? p->equipamentos.itens[MAO_ESQUERDA].espacosGastos : 0);
+      int ocupacaoAtual = calcularOcupacao(&p->inventario);
+      if (ocupacaoAtual - item.espacosGastos + espacosNecessarios > 50)
+      {
+        printf("Sem espaco no inventario para desequipar as armas atuais e equipar a arma de 2 maos!\n");
+        return -1;
+      }
+      removerItemInventario(&p->inventario, item.ID, NULL);
+      if (p->equipamentos.ocupado[MAO_DIREITA])
+      {
+        adicionarItemInventario(&p->inventario, p->equipamentos.itens[MAO_DIREITA]);
+      }
+      if (p->equipamentos.ocupado[MAO_ESQUERDA] && !p->equipamentos.armaDuasMaosEquipada)
+      {
+        adicionarItemInventario(&p->inventario, p->equipamentos.itens[MAO_ESQUERDA]);
+      }
+      p->equipamentos.itens[MAO_DIREITA] = item;
+      p->equipamentos.ocupado[MAO_DIREITA] = 1;
+      p->equipamentos.itens[MAO_ESQUERDA] = item;
+      p->equipamentos.ocupado[MAO_ESQUERDA] = 1;
+      p->equipamentos.armaDuasMaosEquipada = 1;
+      printf("Arma de duas maos '%s' equipada com sucesso em ambas as maos!\n", item.nome);
+      return 0;
+    }
+    default:
+      printf("Tipo de item incompativel com qualquer posicao de equipamento!\n");
+      return -1;
+  }
+
+  if (p->equipamentos.ocupado[slotDestino])
+  {
+    Item antigo = p->equipamentos.itens[slotDestino];
+    int ocupacaoAtual = calcularOcupacao(&p->inventario);
+    if (ocupacaoAtual - item.espacosGastos + antigo.espacosGastos > 50)
+    {
+      printf("Espaco insuficiente no inventario para realizar a troca de itens!\n");
+      return -1;
+    }
+    removerItemInventario(&p->inventario, item.ID, NULL);
+    adicionarItemInventario(&p->inventario, antigo);
+    p->equipamentos.itens[slotDestino] = item;
+    p->equipamentos.ocupado[slotDestino] = 1;
+    printf("Item '%s' equipado em %s (item '%s' retornou ao inventario).\n",
+           item.nome, nomeSlotEquipado(slotDestino), antigo.nome);
+    return 0;
+  }
+  else
+  {
+    removerItemInventario(&p->inventario, item.ID, NULL);
+    p->equipamentos.itens[slotDestino] = item;
+    p->equipamentos.ocupado[slotDestino] = 1;
+    printf("Item '%s' equipado em %s com sucesso!\n", item.nome, nomeSlotEquipado(slotDestino));
+    return 0;
+  }
+}
+
+int desequiparItem(Personagem *p, int slot)
+{
+  if (p == NULL || slot < 0 || slot >= QTD_SLOTS_EQUIPAMENTO)
+  {
+    printf("Slot invalido!\n");
+    return -1;
+  }
+  if (!p->equipamentos.ocupado[slot])
+  {
+    printf("Nao ha item equipado no slot %s!\n", nomeSlotEquipado(slot));
+    return -1;
+  }
+
+  if (p->equipamentos.armaDuasMaosEquipada && (slot == MAO_DIREITA || slot == MAO_ESQUERDA))
+  {
+    Item arma = p->equipamentos.itens[MAO_DIREITA];
+    if (calcularOcupacao(&p->inventario) + arma.espacosGastos > 50)
+    {
+      printf("Sem espaco no inventario para desequipar a arma de duas maos! Item permanece equipado.\n");
+      return -1;
+    }
+    adicionarItemInventario(&p->inventario, arma);
+    p->equipamentos.ocupado[MAO_DIREITA] = 0;
+    p->equipamentos.ocupado[MAO_ESQUERDA] = 0;
+    p->equipamentos.armaDuasMaosEquipada = 0;
+    printf("Arma de duas maos '%s' desequipada e guardada no inventario!\n", arma.nome);
+    return 0;
+  }
+
+  Item item = p->equipamentos.itens[slot];
+  if (calcularOcupacao(&p->inventario) + item.espacosGastos > 50)
+  {
+    printf("Sem espaco no inventario para desequipar o item! Item permanece equipado.\n");
+    return -1;
+  }
+  adicionarItemInventario(&p->inventario, item);
+  p->equipamentos.ocupado[slot] = 0;
+  printf("Item '%s' desequipado de %s e guardado no inventario!\n", item.nome, nomeSlotEquipado(slot));
+  return 0;
+}
+
+int calcularAtaqueTotal(const Personagem *p)
+{
+  int total = p->Ataque;
+  for (int i = 0; i < QTD_SLOTS_EQUIPAMENTO; i++)
+  {
+    if (p->equipamentos.ocupado[i])
+    {
+      if (p->equipamentos.armaDuasMaosEquipada && i == MAO_ESQUERDA) continue;
+      total += p->equipamentos.itens[i].bonusAtaque;
     }
   }
+  return total;
+}
+
+int calcularDefesaTotal(const Personagem *p)
+{
+  int total = p->Defesa;
+  for (int i = 0; i < QTD_SLOTS_EQUIPAMENTO; i++)
+  {
+    if (p->equipamentos.ocupado[i])
+    {
+      if (p->equipamentos.armaDuasMaosEquipada && i == MAO_ESQUERDA) continue;
+      total += p->equipamentos.itens[i].bonusDefesa;
+    }
+  }
+  return total;
+}
+
+int calcularIniciativaTotal(const Personagem *p)
+{
+  int total = p->Iniciativa;
+  for (int i = 0; i < QTD_SLOTS_EQUIPAMENTO; i++)
+  {
+    if (p->equipamentos.ocupado[i])
+    {
+      if (p->equipamentos.armaDuasMaosEquipada && i == MAO_ESQUERDA) continue;
+      total += p->equipamentos.itens[i].bonusIniciativa;
+    }
+  }
+  return total;
+}
+
+int calcularHPTotal(const Personagem *p)
+{
+  int total = p->HP;
+  for (int i = 0; i < QTD_SLOTS_EQUIPAMENTO; i++)
+  {
+    if (p->equipamentos.ocupado[i])
+    {
+      if (p->equipamentos.armaDuasMaosEquipada && i == MAO_ESQUERDA) continue;
+      total += p->equipamentos.itens[i].bonusVida;
+    }
+  }
+  return total;
+}
+
+int calcularPoderTotal(const Personagem *p)
+{
+  int total = p->Poder;
+  for (int i = 0; i < QTD_SLOTS_EQUIPAMENTO; i++)
+  {
+    if (p->equipamentos.ocupado[i])
+    {
+      if (p->equipamentos.armaDuasMaosEquipada && i == MAO_ESQUERDA) continue;
+      total += p->equipamentos.itens[i].poder;
+    }
+  }
+  return total;
+}

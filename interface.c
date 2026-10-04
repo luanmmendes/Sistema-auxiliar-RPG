@@ -6,18 +6,35 @@
 
 int menu(){
     int valor;
-    printf("=================================MENU============================\n");
-    printf("1-Cadastrar personagem\n2-Consultar personagem por ID\n3-Alterar personagem\n4-Remover personagem\n5-Listar personagens\n6-Administrar inventário\n7-Equipar item\n8-Desequipar item\n9-Exibir atributos totais\n10-Exibir Total de Personagens Cadastrados\n0-Encerrar\n");
-    printf("==================================================================");
+    printf("\n================================= MENU ============================\n");
+    printf("1 - Cadastrar personagem\n");
+    printf("2 - Consultar personagem por ID\n");
+    printf("3 - Alterar personagem\n");
+    printf("4 - Remover personagem\n");
+    printf("5 - Listar personagens\n");
+    printf("6 - Administrar inventário\n");
+    printf("7 - Consultar equipamentos\n");
+    printf("8 - Equipar item\n");
+    printf("9 - Desequipar item\n");
+    printf("10 - Exibir atributos totais\n");
+    printf("0 - Encerrar\n");
+    printf("===================================================================\n");
+    printf("Escolha uma opcao: ");
     scanf("%d", &valor);
     return valor;
 }
 int interfaceInventario(){
-  int valor;
-    printf("=================================INVENTARIO============================\n");
-    printf("1-Cadastrar item\n2-Consultar item por ID\n3-Alterar item\n4-Remover item\n5-Listar itens\n6-Exibir Total de Itens Cadastrados\n0-Encerrar\n");
-    printf("==================================================================");
+    int valor;
+    printf("\n=========================== INVENTARIO ===========================\n");
+    printf("1 - Cadastrar item no inventario\n");
+    printf("2 - Consultar item por ID\n");
+    printf("3 - Remover item do inventario\n");
+    printf("4 - Listar itens e ocupacao\n");
+    printf("0 - Voltar ao menu principal\n");
+    printf("==================================================================\n");
+    printf("Escolha uma opcao: ");
     scanf("%d", &valor);
+    return valor;
 }
 // funções de limpeza:
 //scanf sempre vai ler somente os valores brutos do que você digitar, portanto, ele guarda no buffer do teclado o \n necessitando de uma função para limpá-lo e nao carregar o \n para o fgets, que busca tudo que está no buffer do teclado.
@@ -136,49 +153,73 @@ void printaClasse(Personagem *p){
   }
 }
 
-void listaID(Personagem *p,int ID){
-  for (int i = 0; i < 20; i++)
-  {
-    if (p[i].ID == ID)
-    {
-        printf("=========================PERSONAGEM %d============================\n",ID);
-        printf("Nome:%s\n",p[i].nome);
-        //printf("%d",&p->Itens[]);
-        printaEnum(p);
-        printaClasse(p);
-        printf("Nivel %d\n",p->Nivel);
-        printf("HP %d\n",p->HP);
-        printf("Hpatual %d\n",p->HPatual);
-        printf("ataque %d\n",p->Ataque);
-        printf("defesa %d\n",p->Defesa);
-        printf("iniciativa %d\n",p->Iniciativa);
-        printf("poder: %d\n",p->Poder);
-        break;
-      }
-    else if (p[i].ID != ID)
-    {
-      printf("Nao ha personagem cadastrado com este ID!\n");
+void listaID(Personagem *p, int ID) {
+  int achou = 0;
+  for (int i = 0; i < 20; i++) {
+    if (p[i].ID == ID) {
+      achou = 1;
+      printf("\n========================= PERSONAGEM ID %d ============================\n", ID);
+      printf("Nome: %s\n", p[i].nome);
+      printaEnum(&p[i]);
+      printaClasse(&p[i]);
+      printf("Nivel: %d\n", p[i].Nivel);
+      printf("HP: %d (Atual: %d) | Total c/ Equip: %d\n", p[i].HP, p[i].HPatual, calcularHPTotal(&p[i]));
+      printf("Ataque: %d | Total c/ Equip: %d\n", p[i].Ataque, calcularAtaqueTotal(&p[i]));
+      printf("Defesa: %d | Total c/ Equip: %d\n", p[i].Defesa, calcularDefesaTotal(&p[i]));
+      printf("Iniciativa: %d | Total c/ Equip: %d\n", p[i].Iniciativa, calcularIniciativaTotal(&p[i]));
+      printf("Poder: %d | Total c/ Equip: %d\n", p[i].Poder, calcularPoderTotal(&p[i]));
+      printf("Espacos Ocupados no Inventario: %d/50\n", calcularOcupacao(&p[i].inventario));
+      printf("=======================================================================\n");
       break;
     }
   }
+  if (!achou) {
+    printf("Nao ha personagem cadastrado com este ID!\n");
+  }
 }
 
-void listaPersonagens(Personagem *p,int quantidade){
-  for (int i = 0; i < quantidade ; i++)
-  {
-    printf("=========================PERSONAGEM %d============================\n",i+1);
-        printf("Nome:%s\n",p[i].nome);
-        //printf("%d",&p->Itens[]);
-        printaEnum(p);
-        printaClasse(p);
-        printf("Nivel %d\n",p->Nivel);
-        printf("HP %d\n",p->HP);
-        printf("Hpatual %d\n",p->HPatual);
-        printf("ataque %d\n",p->Ataque);
-        printf("defesa %d\n",p->Defesa);
-        printf("iniciativa %d\n",p->Iniciativa);
-        printf("poder: %d\n",p->Poder);
-        printf("=================================================================\n",i);
+void listaPersonagens(Personagem *p, int quantidade) {
+  if (quantidade == 0) {
+    printf("Nenhum personagem cadastrado no momento.\n");
+    return;
   }
-  
+  for (int i = 0; i < quantidade; i++) {
+    printf("\n========================= PERSONAGEM %d (ID %d) ============================\n", i + 1, p[i].ID);
+    printf("Nome: %s\n", p[i].nome);
+    printaEnum(&p[i]);
+    printaClasse(&p[i]);
+    printf("Nivel: %d\n", p[i].Nivel);
+    printf("HP: %d/%d (Total: %d)\n", p[i].HPatual, p[i].HP, calcularHPTotal(&p[i]));
+    printf("Ataque: %d (Total: %d) | Defesa: %d (Total: %d)\n",
+           p[i].Ataque, calcularAtaqueTotal(&p[i]), p[i].Defesa, calcularDefesaTotal(&p[i]));
+    printf("Iniciativa: %d (Total: %d) | Poder: %d (Total: %d)\n",
+           p[i].Iniciativa, calcularIniciativaTotal(&p[i]), p[i].Poder, calcularPoderTotal(&p[i]));
+    printf("Inventario: %d/50 espacos ocupados (%d itens)\n",
+           calcularOcupacao(&p[i].inventario), p[i].inventario.quantidade);
+    printf("===========================================================================\n");
+  }
+}
+
+void exibeEquipamentosPersonagem(const Personagem *p) {
+  if (p == NULL) return;
+  printf("\n============= EQUIPAMENTOS DO PERSONAGEM (ID %d) =============\n", p->ID);
+  for (int i = 0; i < QTD_SLOTS_EQUIPAMENTO; i++) {
+    printf("[%d] %-18s: ", i + 1, nomeSlotEquipado(i));
+    if (p->equipamentos.ocupado[i]) {
+      printf("%s [ID: %d, Atq: %+d, Def: %+d, Vida: %+d, Ini: %+d, Poder: %d]\n",
+             p->equipamentos.itens[i].nome,
+             p->equipamentos.itens[i].ID,
+             p->equipamentos.itens[i].bonusAtaque,
+             p->equipamentos.itens[i].bonusDefesa,
+             p->equipamentos.itens[i].bonusVida,
+             p->equipamentos.itens[i].bonusIniciativa,
+             p->equipamentos.itens[i].poder);
+    } else {
+      printf("(vazio)\n");
+    }
+  }
+  if (p->equipamentos.armaDuasMaosEquipada) {
+    printf("* Nota: Arma de duas maos bloqueia ambas as maos.\n");
+  }
+  printf("==============================================================\n");
 }

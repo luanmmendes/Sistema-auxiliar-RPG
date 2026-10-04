@@ -1,19 +1,24 @@
 #ifndef INVENTARIO_H
 #define INVENTARIO_H
 
+#include "item.h"
 
-typedef struct
+#define CAPACIDADE_INVENTARIO 50
+#define ESPACOS_MAXIMOS_INVENTARIO 50
+
+typedef struct Inventario
 {
-    int ID;
-    char nome[50];
-    int espacos[50];
-    int bonusAtaque;
-    int bonusDefesa;
-    int bonusVida;
-    int bonusIniciativa;
-    int poder;
+    Item itens[CAPACIDADE_INVENTARIO];
+    int quantidade;
+} Inventario;
 
-}inventario;
-
+void inicializarInventario(Inventario *inv);
+int calcularOcupacao(const Inventario *inv);
+int espacosLivres(const Inventario *inv);
+int buscarItemInventario(const Inventario *inv, int id);
+int adicionarItemInventario(Inventario *inv, Item item);
+int removerItemInventario(Inventario *inv, int id, Item *removido);
+void listarInventario(const Inventario *inv);
 
 #endif
+

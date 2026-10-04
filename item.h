@@ -31,7 +31,7 @@ typedef struct Item
     char nome[50];
     enum tipoItem categoria;
     enum equipadoEm equipado;
-    int espaçosGastos;
+    int espacosGastos;
     int bonusAtaque;
     int bonusDefesa;
     int bonusVida;

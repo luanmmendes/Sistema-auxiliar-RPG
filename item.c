@@ -5,17 +5,19 @@
 
 Item *iniciarItem(int capacidadeMax)
 {
-    Item *itens = malloc(capacidadeMax * sizeof(itens));
+    Item *itens = malloc(capacidadeMax * sizeof(*itens));
+    if (itens == NULL) return NULL;
     itens->ID = 0;
     itens->nome[0] = 'x';
     itens->categoria = 0;
     itens->equipado = 0;
-    itens->espaçosGastos = 0;
+    itens->espacosGastos = 0;
     itens->bonusAtaque = 0;
     itens->bonusDefesa = 0;
     itens->bonusVida = 0;
     itens->bonusIniciativa = 0;
     itens->poder = 0;
+    return itens;
 }
 
 Item cadastrarItem(Item *itens)
@@ -66,10 +68,20 @@ Item cadastrarItem(Item *itens)
             verificaOndeEquipado = validaEnumEquipadoEm(texto);
         }
     }
+    itens->categoria = verificaCategoria;
+    itens->equipado = verificaOndeEquipado;
+
+    printf("Espacos consumidos (1 a 50): ");
+    scanf("%d", &itens->espacosGastos);
+    while (itens->espacosGastos < 1 || itens->espacosGastos > 50)
+    {
+        printf("Digite um valor de espacos valido (1 a 50): ");
+        scanf("%d", &itens->espacosGastos);
+    }
 
     printf("Bonus de Vida: ");
     scanf("%d", &itens->bonusVida);
-    while (itens->bonusVida < 0 || itens->bonusVida > 999) // verificar
+    while (itens->bonusVida < 0 || itens->bonusVida > 999)
     {
         printf("digite um HP valido!");
         scanf("%d", &itens->bonusVida);
@@ -84,7 +96,7 @@ Item cadastrarItem(Item *itens)
     }
     printf("Bonus de Defesa: ");
     scanf("%d", &itens->bonusDefesa);
-    while (itens->bonusDefesa < 1 || itens->bonusDefesa > 30)
+    while (itens->bonusDefesa < 0 || itens->bonusDefesa > 30)
     {
         printf("Digite um valor valido!");
         scanf("%d", &itens->bonusDefesa);
@@ -104,4 +116,5 @@ Item cadastrarItem(Item *itens)
         printf("digite um valor valido!");
         scanf("%d", &itens->poder);
     }
+    return *itens;
 }

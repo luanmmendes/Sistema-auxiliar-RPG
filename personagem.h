@@ -18,9 +18,20 @@ enum Classe {
 
 };
 
+#include "inventario.h"
+#include "item.h"
+
+#define QTD_SLOTS_EQUIPAMENTO 9
+
+typedef struct Equipamentos
+{
+    Item itens[QTD_SLOTS_EQUIPAMENTO];
+    int ocupado[QTD_SLOTS_EQUIPAMENTO];
+    int armaDuasMaosEquipada;
+} Equipamentos;
+
 typedef struct Personagem
 {  
-    int Itens[CAPACIDADE_ITENS];
     int ID;
     char nome[50];    
     enum Raca raca;
@@ -32,22 +43,31 @@ typedef struct Personagem
     int Defesa;
     int Iniciativa;
     int Poder;
+    Inventario inventario;
+    Equipamentos equipamentos;
 
 }Personagem;
-
-
 
 void verificaID(Personagem *p,int quantidade);
 Personagem* iniciarPersonagem(int capacidadeMax);
 Personagem cadastrarPersonagem(Personagem* personagem);
 void alterarPersonagem(Personagem* personagem,int id,int quantidade);
 void removerPersonagem(Personagem*p,int *quantidade,int id);
+
+void inicializarEquipamentos(Equipamentos *eq);
+int equiparItem(Personagem *p, int idItem);
+int desequiparItem(Personagem *p, int slot);
+int calcularAtaqueTotal(const Personagem *p);
+int calcularDefesaTotal(const Personagem *p);
+int calcularIniciativaTotal(const Personagem *p);
+int calcularHPTotal(const Personagem *p);
+int calcularPoderTotal(const Personagem *p);
+const char* nomeSlotEquipado(int slot);
+
 typedef struct gerenciamentoPersona
 {
     Personagem* personagens;
     int capacidadeAtual;
 }gerenciamentoPersona;
-
-
 
 #endif
