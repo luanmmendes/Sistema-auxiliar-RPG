@@ -7,10 +7,17 @@
 int menu(){
     int valor;
     printf("=================================MENU============================\n");
-    printf("1-Cadastrar personagem\n2-Consultar personagem por ID\n3-Alterar personagem\n4-Remover personagem\n5-Listar personagens\n6-Administrar inventário\n7-Consultar equipamentos\n8-Equipar item\n9-Desequipar item\n10-Exibir atributos totais\n11-Exibir Total de Personagens Cadastrados\n0-Encerrar\n");
+    printf("1-Cadastrar personagem\n2-Consultar personagem por ID\n3-Alterar personagem\n4-Remover personagem\n5-Listar personagens\n6-Administrar inventário\n7-Equipar item\n8-Desequipar item\n9-Exibir atributos totais\n10-Exibir Total de Personagens Cadastrados\n0-Encerrar\n");
     printf("==================================================================");
     scanf("%d", &valor);
     return valor;
+}
+int interfaceInventario(){
+  int valor;
+    printf("=================================INVENTARIO============================\n");
+    printf("1-Cadastrar item\n2-Consultar item por ID\n3-Alterar item\n4-Remover item\n5-Listar itens\n6-Exibir Total de Itens Cadastrados\n0-Encerrar\n");
+    printf("==================================================================");
+    scanf("%d", &valor);
 }
 // funções de limpeza:
 //scanf sempre vai ler somente os valores brutos do que você digitar, portanto, ele guarda no buffer do teclado o \n necessitando de uma função para limpá-lo e nao carregar o \n para o fgets, que busca tudo que está no buffer do teclado.
@@ -54,7 +61,43 @@ int validaEnumRaca(char* texto){
   if(strcmp(texto,"HALFLING") == 0)return HALFLING;
   else return -1;
 }
-
+int validaEnumItem(char* texto){  
+  int i = strlen(texto); 
+  if (texto[i-1] == '\n')
+  {
+    texto[i-1] = '\0';
+  }
+  if(strcmp(texto, "ELMO") == 0)return ELMO;
+  if(strcmp(texto,"PEITORAL") == 0)return PEITORAL;
+  if(strcmp(texto,"MANOPLAS") == 0)return MANOPLAS;
+  if(strcmp(texto,"CALCA") == 0)return CALCA;
+  if(strcmp(texto,"BOTAS") == 0)return BOTAS;
+  if(strcmp(texto,"ANEL") == 0)return ANEL;
+  if(strcmp(texto,"COLAR") == 0)return COLAR;
+  if(strcmp(texto,"CINTO") == 0)return CINTO;
+  if(strcmp(texto,"ACESSORIO1") == 0)return ACESSORIO1;
+  if(strcmp(texto,"ACESSORIO2") == 0)return ACESSORIO2;  
+  if(strcmp(texto,"ARMA_UMA_MAO") == 0)return ARMA_UMA_MAO;
+  if(strcmp(texto,"ARMA_DUAS_MAOS") == 0 )return ARMA_DUAS_MAOS; 
+  else return -1;
+}
+int validaEnumEquipadoEm(char* texto){  
+  int i = strlen(texto); 
+  if (texto[i-1] == '\n')
+  {
+    texto[i-1] = '\0';
+  }
+  if(strcmp(texto, "CABECA") == 0)return CABECA;
+  if(strcmp(texto,"PEITO") == 0)return PEITO;
+  if(strcmp(texto,"BRACOS") == 0)return BRACOS;
+  if(strcmp(texto,"PERNAS") == 0)return PERNAS;
+  if(strcmp(texto, "PES") == 0)return PES;
+  if(strcmp(texto,"MAO_DIREITA") == 0)return MAO_DIREITA;
+  if(strcmp(texto,"MAO_ESQUERDA") == 0)return MAO_ESQUERDA;
+  if(strcmp(texto,"ACESSORIO1") == 0)return ACESSORIO1;
+  if(strcmp(texto,"ACESSORIO2") == 0)return ACESSORIO2;
+  else return -1;
+}
   
 //variaveis de print, para deixarmos bonitinho a saida de dados.
 void printaEnum(Personagem *p){

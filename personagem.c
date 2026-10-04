@@ -51,7 +51,7 @@ Personagem cadastrarPersonagem(Personagem *p)
     {
       printf("digite uma raca valida! (USE CAIXA ALTA)");
       fgets(texto, sizeof(texto), stdin);
-      limpaBuffer();
+      limpaBarra(texto);
       verificaRaca = validaEnumRaca(texto);
     }
   }

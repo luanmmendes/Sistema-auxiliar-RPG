@@ -38,7 +38,7 @@ typedef struct Personagem
 
 
 void verificaID(Personagem *p,int quantidade);
-Personagem* iniciarPersonagem();
+Personagem* iniciarPersonagem(int capacidadeMax);
 Personagem cadastrarPersonagem(Personagem* personagem);
 void alterarPersonagem(Personagem* personagem,int id,int quantidade);
 void removerPersonagem(Personagem*p,int *quantidade,int id);

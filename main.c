@@ -1,18 +1,19 @@
 #include "interface.h"
 #include "personagem.h"
-#include "item.c"
+#include "item.h"
 
 #include <stdlib.h>
 #include <stdio.h>
 #define CAPACIDADE 20
+#define CAPACIDADE_ITENS 50
 // comando para rodar o codigo gcc -Wall *.c
 int main(int argc, char const *argv[])
 {
     // iniciar programa
     // menu();
-    int valor, id;
+    int valor, id,menuInventario;
     Personagem *p = iniciarPersonagem(CAPACIDADE);
-    int quantidade = 0;
+    int quantidade,qtdItem = 0;
     do
     {
         valor = menu();
@@ -44,8 +45,39 @@ int main(int argc, char const *argv[])
             listaPersonagens(p, quantidade);
             break;
         case 6:
-            /* code */
-            break;
+            Item* i = iniciarItem(CAPACIDADE_ITENS);
+        do
+            {
+                int menuInventario = interfaceInventario();
+                switch (menuInventario)
+                {
+                case 1:
+                    cadastrarItem(&i[qtdItem]);
+                    qtdItem++;
+                    break;
+                 case 2:
+                    /* code */
+                    break;
+                 case 3:
+                    /* code */
+                    break;
+                 case 4:
+                    /* code */
+                    break;
+                 case 5:
+                    /* code */
+                    break;
+                 case 6:
+                    /* code */
+                    break;
+                
+                default:
+                    printf("digite um numero valido!");
+                    break;
+                }
+            } while (menuInventario !=0);
+            
+        break;
         case 7:
             /* code */
             break;
