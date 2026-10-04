@@ -7,7 +7,7 @@
 int menu(){
     int valor;
     printf("=================================MENU============================\n");
-    printf("1-Cadastrar personagem\n2-Consultar personagem por ID\n3-Alterar personagem\n4-Remover personagem\n5-Listar personagens\n6-Administrar inventário\n7-Consultar equipamentos\n8-Equipar item\n9-Desequipar item\n10-Exibir atributos totais\n0-Encerrar\n");
+    printf("1-Cadastrar personagem\n2-Consultar personagem por ID\n3-Alterar personagem\n4-Remover personagem\n5-Listar personagens\n6-Administrar inventário\n7-Consultar equipamentos\n8-Equipar item\n9-Desequipar item\n10-Exibir atributos totais\n11-Exibir Total de Personagens Cadastrados\n0-Encerrar\n");
     printf("==================================================================");
     scanf("%d", &valor);
     return valor;
@@ -118,4 +118,24 @@ void listaID(Personagem *p,int ID){
       break;
     }
   }
+}
+
+void listaPersonagens(Personagem *p,int quantidade){
+  for (int i = 0; i < quantidade ; i++)
+  {
+    printf("=========================PERSONAGEM %d============================\n",i+1);
+        printf("Nome:%s\n",p[i].nome);
+        //printf("%d",&p->Itens[]);
+        printaEnum(p);
+        printaClasse(p);
+        printf("Nivel %d\n",p->Nivel);
+        printf("HP %d\n",p->HP);
+        printf("Hpatual %d\n",p->HPatual);
+        printf("ataque %d\n",p->Ataque);
+        printf("defesa %d\n",p->Defesa);
+        printf("iniciativa %d\n",p->Iniciativa);
+        printf("poder: %d\n",p->Poder);
+        printf("=================================================================\n",i);
+  }
+  
 }

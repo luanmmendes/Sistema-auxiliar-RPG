@@ -13,9 +13,10 @@ int main(int argc, char const *argv[])
     int valor, id;
     Personagem *p = iniciarPersonagem(CAPACIDADE);
     int quantidade = 0;
-    do{
+    do
+    {
         valor = menu();
-        
+
         switch (valor)
         {
 
@@ -23,20 +24,6 @@ int main(int argc, char const *argv[])
             verificaID(p, quantidade);
             cadastrarPersonagem(&p[quantidade]);
             quantidade++;
-
-            // printf("ID: %d\n",p->ID);
-            printf("Nome: %s\n",p->nome);
-            // printf("%d",&p->CapacidadeItens[0]);
-            // printf("Raca: %d\n",p->raca);
-            // printf("Classe %d",&p.classe);
-            // printf("Nivel %d\n",&p.Nivel);
-            // printf("HP %d\n",&p.HP);
-            // printf("Hpatual %d\n",&p.HPatual);
-            // printf("ataque %d\n",&p.Ataque);
-            // printf("defesa %d\n",&p.Defesa);
-            // printf("iniciativa %d\n",&p.Iniciativa);
-            // printf("poder: %d\n",&p.Poder);
-
             break;
         case 2:
             printf("qual o ID do personagem que você deseja buscar?");
@@ -44,13 +31,17 @@ int main(int argc, char const *argv[])
             listaID(p, id);
             break;
         case 3:
-            /* code */
+            printf("qual o ID do personagem que você deseja alterar?");
+            scanf("%d", &id);
+            alterarPersonagem(p, id, quantidade);
             break;
         case 4:
-            /* code */
+        printf("qual o ID do personagem que você deseja deletar?");
+        scanf("%d",&id);
+        removerPersonagem(p,&quantidade,id);
             break;
         case 5:
-            /* code */
+            listaPersonagens(p, quantidade);
             break;
         case 6:
             /* code */
@@ -67,14 +58,15 @@ int main(int argc, char const *argv[])
         case 10:
             /* code */
             break;
+        case 11:
+            printf("Há %d personagens cadastrados",quantidade);
+            break;
 
         default:
             printf("digite um número válido!");
             break;
         }
-    }
-    while (valor != 0);
-        
+    } while (valor != 0);
 
     return 0;
 }
