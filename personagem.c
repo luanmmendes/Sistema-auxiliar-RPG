@@ -176,23 +176,16 @@ void removerPersonagem(Personagem *p, int *quantidade, int id)
   }
 }
 
-void verificaID(Personagem *p, int quantidade)
+int verificaID(Personagem *p, int quantidade, int id)
 {
-  int repetido = 1;
-  while (repetido)
+  for (int i = 0; i < quantidade; i++)
   {
-    repetido = 0;
-    for (int i = 0; i < quantidade; i++)
+    if (p[i].ID == id)
     {
-      if (p[i].ID == p[quantidade].ID)
-      {
-        printf("Nao e possivel cadastrar personagens com IDs repetidos! Digite outro ID: ");
-        scanf("%d", &p[quantidade].ID);
-        repetido = 1;
-        break;
-      }
+      return 1;
     }
   }
+  return 0;
 }
 
 const char* nomeSlotEquipado(int slot)
@@ -222,7 +215,41 @@ void inicializarEquipamentos(Equipamentos *eq)
   eq->armaDuasMaosEquipada = 0;
 }
 
-int equiparItem(Personagem *p, int idItem)
+int itemIDEmUso(Personagem *p, int id)
+{
+  if (buscarItemInventario(&p->inventario, id) != -1)
+  {
+    return 1;
+  }
+  for (int i = 0; i < QTD_SLOTS_EQUIPAMENTO; i++)
+  {
+    if (p->equipamentos.ocupado[i] && p->equipamentos.itens[i].ID == id)
+    {
+      return 1;
+    }
+  }
+  return 0;
+}
+
+int slotCompativel(enum tipoItem categoria, int slot)
+{
+  switch (categoria)
+  {
+    case ELMO: return slot == CABECA;
+    case PEITORAL: return slot == PEITO;
+    case MANOPLAS: return slot == BRACOS;
+    case CALCA: return slot == PERNAS;
+    case BOTAS: return slot == PES;
+    case ANEL:
+    case COLAR:
+    case CINTO: return slot == ACESSORIO1 || slot == ACESSORIO2;
+    case ARMA_UMA_MAO:
+    case ARMA_DUAS_MAOS: return slot == MAO_DIREITA || slot == MAO_ESQUERDA;
+    default: return 0;
+  }
+}
+
+int equiparItem(Personagem *p, int idItem, int slot)
 {
   if (p == NULL) return -1;
 
@@ -236,6 +263,12 @@ int equiparItem(Personagem *p, int idItem)
   Item item = p->inventario.itens[pos];
   int slotDestino = -1;
 
+  if (!slotCompativel(item.categoria, slot))
+  {
+    printf("Item '%s' incompativel com a posicao %s! Nada foi alterado.\n", item.nome, nomeSlotEquipado(slot));
+    return -1;
+  }
+
   switch (item.categoria)
   {
     case ELMO: slotDestino = CABECA; break;
@@ -246,9 +279,7 @@ int equiparItem(Personagem *p, int idItem)
     case ANEL:
     case COLAR:
     case CINTO:
-      if (!p->equipamentos.ocupado[ACESSORIO1]) slotDestino = ACESSORIO1;
-      else if (!p->equipamentos.ocupado[ACESSORIO2]) slotDestino = ACESSORIO2;
-      else slotDestino = ACESSORIO1;
+      slotDestino = slot;
       break;
     case ARMA_UMA_MAO:
       if (p->equipamentos.armaDuasMaosEquipada)
@@ -256,9 +287,7 @@ int equiparItem(Personagem *p, int idItem)
         printf("Conflito: Ha uma arma de duas maos equipada! Desequipe-a primeiro.\n");
         return -1;
       }
-      if (!p->equipamentos.ocupado[MAO_DIREITA]) slotDestino = MAO_DIREITA;
-      else if (!p->equipamentos.ocupado[MAO_ESQUERDA]) slotDestino = MAO_ESQUERDA;
-      else slotDestino = MAO_DIREITA;
+      slotDestino = slot;
       break;
     case ARMA_DUAS_MAOS:
     {

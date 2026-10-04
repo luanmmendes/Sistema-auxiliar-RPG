@@ -9,7 +9,7 @@ int validaEnumItem(char* texto);
 int validaEnumEquipadoEm(char* texto);
 void limpaBuffer();
 void limpaBarra(char* texto);
-void listaID(Personagem *p,int ID);
+void listaID(Personagem *p,int quantidade,int ID);
 void listaPersonagens(Personagem *p,int quantidade);
 void printaEnum(Personagem *p);
 void printaRaca(Personagem *p);

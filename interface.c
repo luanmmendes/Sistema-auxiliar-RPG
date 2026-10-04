@@ -153,9 +153,9 @@ void printaClasse(Personagem *p){
   }
 }
 
-void listaID(Personagem *p, int ID) {
+void listaID(Personagem *p, int quantidade, int ID) {
   int achou = 0;
-  for (int i = 0; i < 20; i++) {
+  for (int i = 0; i < quantidade; i++) {
     if (p[i].ID == ID) {
       achou = 1;
       printf("\n========================= PERSONAGEM ID %d ============================\n", ID);

@@ -48,14 +48,16 @@ typedef struct Personagem
 
 }Personagem;
 
-void verificaID(Personagem *p,int quantidade);
+int verificaID(Personagem *p,int quantidade,int id);
 Personagem* iniciarPersonagem(int capacidadeMax);
 Personagem cadastrarPersonagem(Personagem* personagem);
 void alterarPersonagem(Personagem* personagem,int id,int quantidade);
 void removerPersonagem(Personagem*p,int *quantidade,int id);
 
 void inicializarEquipamentos(Equipamentos *eq);
-int equiparItem(Personagem *p, int idItem);
+int itemIDEmUso(Personagem *p, int id);
+int slotCompativel(enum tipoItem categoria, int slot);
+int equiparItem(Personagem *p, int idItem, int slot);
 int desequiparItem(Personagem *p, int slot);
 int calcularAtaqueTotal(const Personagem *p);
 int calcularDefesaTotal(const Personagem *p);

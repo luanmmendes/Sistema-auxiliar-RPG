@@ -26,15 +26,23 @@ int main(void)
                 printf("Capacidade maxima de %d personagens atingida!\n", CAPACIDADE);
                 break;
             }
-            cadastrarPersonagem(&p[quantidade]);
-            verificaID(p, quantidade);
-            quantidade++;
-            printf("Personagem cadastrado com sucesso! Total: %d\n", quantidade);
+            {
+                Personagem novo = p[quantidade];
+                cadastrarPersonagem(&novo);
+                if (verificaID(p, quantidade, novo.ID))
+                {
+                    printf("Ja existe um personagem com o ID %d! Operacao recusada, cadastro inalterado.\n", novo.ID);
+                    break;
+                }
+                p[quantidade] = novo;
+                quantidade++;
+                printf("Personagem cadastrado com sucesso! Total: %d\n", quantidade);
+            }
             break;
         case 2:
             printf("qual o ID do personagem que você deseja buscar? ");
             scanf("%d", &id);
-            listaID(p, id);
+            listaID(p, quantidade, id);
             break;
         case 3:
             printf("qual o ID do personagem que você deseja alterar? ");
@@ -72,6 +80,11 @@ int main(void)
                 {
                     Item itemTemp;
                     cadastrarItem(&itemTemp);
+                    if (itemIDEmUso(&p[pos], itemTemp.ID))
+                    {
+                        printf("Ja existe um item com o ID %d neste personagem (inventario ou equipado)! Operacao recusada.\n", itemTemp.ID);
+                        break;
+                    }
                     adicionarItemInventario(&p[pos].inventario, itemTemp);
                     break;
                 }
@@ -158,7 +171,11 @@ int main(void)
                 int idItem;
                 printf("Digite o ID do item que deseja equipar: ");
                 scanf("%d", &idItem);
-                equiparItem(&p[pos], idItem);
+                exibeEquipamentosPersonagem(&p[pos]);
+                int slotEquipar;
+                printf("Digite o numero da posicao onde deseja equipar (1 a 9): ");
+                scanf("%d", &slotEquipar);
+                equiparItem(&p[pos], idItem, slotEquipar - 1);
             }
             break;
         }
