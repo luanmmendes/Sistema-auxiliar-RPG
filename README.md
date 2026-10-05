@@ -12,7 +12,7 @@ Projeto desenvolvido para a disciplina de **Algoritmos e Estruturas de Dados 2**
 
 O programa tem como intuito implementar um sistema auxiliar para mestres de RPG de mesa diretamente no terminal. Com ele, o mestre consegue cadastrar, consultar, alterar e remover personagens de forma prática, além de administrar o inventário de cada um, equipando itens que concedem bônus de vida, ataque, defesa, iniciativa e poder em tempo real.
 
-O projeto foi construído com foco em boas práticas de programação em **C (C11)**: ponteiros, modularização de código em arquivos `.c` e `.h`, tratamento de buffers do teclado e compilação sem warnings.
+O projeto foi construído com foco em boas práticas de programação em C : ponteiros, modularização de código em arquivos `.c` e `.h`, tratamento de buffers do teclado e compilação sem warnings.
 
 ---
 
