@@ -3,10 +3,23 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
 int menu(){
     int valor;
-    printf("\n================================= MENU ============================\n");
+    printf("\n============================= MENU PRINCIPAL ======================\n");   
+    printf("1 - Personagens\n");
+    printf("2 - Bestiario\n");
+    printf("3 - Encontros\n");
+    printf("4 - Combate\n");
+    printf("0 - Encerrar\n");
+    printf("===================================================================\n");
+    printf("Escolha uma opcao: ");
+    scanf("%d", &valor);
+    return valor;
+}
+
+int menuPersonagem(){
+    int valor;
+    printf("\n======================== MENU DE PERSONAGENS ======================\n");
     printf("1 - Cadastrar personagem\n");
     printf("2 - Consultar personagem por ID\n");
     printf("3 - Alterar personagem\n");
@@ -17,7 +30,7 @@ int menu(){
     printf("8 - Equipar item\n");
     printf("9 - Desequipar item\n");
     printf("10 - Exibir atributos totais\n");
-    printf("0 - Encerrar\n");
+    printf("0 - Voltar ao menu principal\n");
     printf("===================================================================\n");
     printf("Escolha uma opcao: ");
     scanf("%d", &valor);
@@ -39,7 +52,7 @@ int interfaceInventario(){
 // funções de limpeza:
 //scanf sempre vai ler somente os valores brutos do que você digitar, portanto, ele guarda no buffer do teclado o \n necessitando de uma função para limpá-lo e nao carregar o \n para o fgets, que busca tudo que está no buffer do teclado.
 //o fgets, por outro lado, como dito acima, ele guarda os valores diretamente numa variavel, de forma que se você digitar por exemplo nome: luan ele vai receber 'l','u','a','n','\n','\0', precisando que troquemos o \n por um \0 podendo travar o app caso contrário,pois como o buffer está vazio, ele espera uma entrada para conseguir limpar
-
+//scanf salva os valores do que você digitou no buffer do teclado, finalizando com um \n, a confirmação que você deu 
 void limpaBuffer(){ // é usado depois de scanf, para limpar o buffer do teclado.
   int c;
   while ((c = getchar()) != '\n' && c != EOF)
@@ -158,7 +171,7 @@ void listaID(Personagem *p, int quantidade, int ID) {
   for (int i = 0; i < quantidade; i++) {
     if (p[i].ID == ID) {
       achou = 1;
-      printf("\n========================= PERSONAGEM ID %d ============================\n", ID);
+      printf("\n========================= PERSONAGEM ID: %d ============================\n", ID);
       printf("Nome: %s\n", p[i].nome);
       printaEnum(&p[i]);
       printaClasse(&p[i]);
@@ -184,7 +197,7 @@ void listaPersonagens(Personagem *p, int quantidade) {
     return;
   }
   for (int i = 0; i < quantidade; i++) {
-    printf("\n========================= PERSONAGEM %d (ID %d) ============================\n", i + 1, p[i].ID);
+    printf("\n========================= PERSONAGEM %d (ID: %d) ============================\n", i + 1, p[i].ID);
     printf("Nome: %s\n", p[i].nome);
     printaEnum(&p[i]);
     printaClasse(&p[i]);
@@ -202,7 +215,7 @@ void listaPersonagens(Personagem *p, int quantidade) {
 
 void exibeEquipamentosPersonagem(const Personagem *p) {
   if (p == NULL) return;
-  printf("\n============= EQUIPAMENTOS DO PERSONAGEM (ID %d) =============\n", p->ID);
+  printf("\n============= EQUIPAMENTOS DO PERSONAGEM (ID: %d) =============\n", p->ID);
   for (int i = 0; i < QTD_SLOTS_EQUIPAMENTO; i++) {
     printf("[%d] %-18s: ", i + 1, nomeSlotEquipado(i));
     if (p->equipamentos.ocupado[i]) {

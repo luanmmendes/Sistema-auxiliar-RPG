@@ -3,6 +3,7 @@
 #include "personagem.h"
 #include "item.h"
 int menu();
+int menuPersonagem();
 int validaEnumRaca(char* texto);
 int validaEnumClasse(char* texto);
 int validaEnumItem(char* texto);

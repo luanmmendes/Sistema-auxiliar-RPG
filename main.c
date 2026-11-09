@@ -9,233 +9,263 @@
 // comando para rodar o codigo gcc -Wall *.c
 int main(void)
 {
-    // iniciar programa
-    // menu();
-    int valor, id, menuInventario;
+    int opcaoMenuPrincipal, opcaoPersonagem;
+    int id, menuInventario;
     Personagem *p = iniciarPersonagem(CAPACIDADE);
     int quantidade = 0;
+
     do
     {
-        valor = menu();
+        opcaoMenuPrincipal = menu();
 
-        switch (valor)
+        switch (opcaoMenuPrincipal)
         {
         case 1:
-            if (quantidade >= CAPACIDADE)
-            {
-                printf("Capacidade maxima de %d personagens atingida!\n", CAPACIDADE);
-                break;
-            }
-            {
-                Personagem novo = p[quantidade];
-                cadastrarPersonagem(&novo);
-                if (verificaID(p, quantidade, novo.ID))
-                {
-                    printf("Ja existe um personagem com o ID %d! Operacao recusada, cadastro inalterado.\n", novo.ID);
-                    break;
-                }
-                p[quantidade] = novo;
-                quantidade++;
-                printf("Personagem cadastrado com sucesso! Total: %d\n", quantidade);
-            }
-            break;
-        case 2:
-            printf("qual o ID do personagem que você deseja buscar? ");
-            scanf("%d", &id);
-            listaID(p, quantidade, id);
-            break;
-        case 3:
-            printf("qual o ID do personagem que você deseja alterar? ");
-            scanf("%d", &id);
-            alterarPersonagem(p, id, quantidade);
-            break;
-        case 4:
-            printf("qual o ID do personagem que você deseja deletar? ");
-            scanf("%d", &id);
-            removerPersonagem(p, &quantidade, id);
-            break;
-        case 5:
-            listaPersonagens(p, quantidade);
-            break;
-        case 6:
-        {
-            printf("Qual o ID do personagem cujo inventario deseja administrar? ");
-            scanf("%d", &id);
-            int pos = -1;
-            for (int k = 0; k < quantidade; k++)
-            {
-                if (p[k].ID == id) { pos = k; break; }
-            }
-            if (pos == -1)
-            {
-                printf("Personagem com ID %d nao encontrado!\n", id);
-                break;
-            }
             do
             {
-                menuInventario = interfaceInventario();
-                switch (menuInventario)
+                opcaoPersonagem = menuPersonagem();
+
+                switch (opcaoPersonagem)
                 {
                 case 1:
-                {
-                    Item itemTemp;
-                    cadastrarItem(&itemTemp);
-                    if (itemIDEmUso(&p[pos], itemTemp.ID))
+                    if (quantidade >= CAPACIDADE)
                     {
-                        printf("Ja existe um item com o ID %d neste personagem (inventario ou equipado)! Operacao recusada.\n", itemTemp.ID);
+                        printf("Capacidade maxima de %d personagens atingida!\n", CAPACIDADE);
                         break;
                     }
-                    adicionarItemInventario(&p[pos].inventario, itemTemp);
+                    {
+                        Personagem novo = p[quantidade];
+                        cadastrarPersonagem(&novo);
+                        if (verificaID(p, quantidade, novo.ID))
+                        {
+                            printf("Ja existe um personagem com o ID %d! Operacao recusada, cadastro inalterado.\n", novo.ID);
+                            break;
+                        }
+                        p[quantidade] = novo;
+                        quantidade++;
+                        printf("Personagem cadastrado com sucesso! Total: %d\n", quantidade);
+                    }
                     break;
-                }
                 case 2:
-                {
-                    int idItem;
-                    printf("Digite o ID do item que deseja consultar: ");
-                    scanf("%d", &idItem);
-                    int idx = buscarItemInventario(&p[pos].inventario, idItem);
-                    if (idx != -1)
-                    {
-                        printf("Item encontrado:\n");
-                        printf("  [ID: %d] %s | Espacos: %d | Atq: %+d | Def: %+d | Vida: %+d | Ini: %+d | Poder: %d\n",
-                               p[pos].inventario.itens[idx].ID,
-                               p[pos].inventario.itens[idx].nome,
-                               p[pos].inventario.itens[idx].espacosGastos,
-                               p[pos].inventario.itens[idx].bonusAtaque,
-                               p[pos].inventario.itens[idx].bonusDefesa,
-                               p[pos].inventario.itens[idx].bonusVida,
-                               p[pos].inventario.itens[idx].bonusIniciativa,
-                               p[pos].inventario.itens[idx].poder);
-                    }
-                    else
-                    {
-                        printf("Item com ID %d nao encontrado no inventario!\n", idItem);
-                    }
+                    printf("qual o ID do personagem que você deseja buscar? ");
+                    scanf("%d", &id);
+                    listaID(p, quantidade, id);
                     break;
-                }
                 case 3:
+                    printf("qual o ID do personagem que você deseja alterar? ");
+                    scanf("%d", &id);
+                    alterarPersonagem(p, id, quantidade);
+                    break;
+                case 4:
+                    printf("qual o ID do personagem que você deseja deletar? ");
+                    scanf("%d", &id);
+                    removerPersonagem(p, &quantidade, id);
+                    break;
+                case 5:
+                    listaPersonagens(p, quantidade);
+                    break;
+                case 6:
                 {
-                    int idItem;
-                    printf("Digite o ID do item que deseja remover: ");
-                    scanf("%d", &idItem);
-                    removerItemInventario(&p[pos].inventario, idItem, NULL);
+                    printf("Qual o ID do personagem cujo inventario deseja administrar? ");
+                    scanf("%d", &id);
+                    int pos = -1;
+                    for (int k = 0; k < quantidade; k++)
+                    {
+                        if (p[k].ID == id) { pos = k; break; }
+                    }
+                    if (pos == -1)
+                    {
+                        printf("Personagem com ID %d nao encontrado!\n", id);
+                        break;
+                    }
+                    do
+                    {
+                        menuInventario = interfaceInventario();
+                        switch (menuInventario)
+                        {
+                        case 1:
+                        {
+                            Item itemTemp;
+                            cadastrarItem(&itemTemp);
+                            if (itemIDEmUso(&p[pos], itemTemp.ID))
+                            {
+                                printf("Ja existe um item com o ID %d neste personagem (inventario ou equipado)! Operacao recusada.\n", itemTemp.ID);
+                                break;
+                            }
+                            adicionarItemInventario(&p[pos].inventario, itemTemp);
+                            break;
+                        }
+                        case 2:
+                        {
+                            int idItem;
+                            printf("Digite o ID do item que deseja consultar: ");
+                            scanf("%d", &idItem);
+                            int idx = buscarItemInventario(&p[pos].inventario, idItem);
+                            if (idx != -1)
+                            {
+                                printf("Item encontrado:\n");
+                                printf("  [ID: %d] %s | Espacos: %d | Atq: %+d | Def: %+d | Vida: %+d | Ini: %+d | Poder: %d\n",
+                                       p[pos].inventario.itens[idx].ID,
+                                       p[pos].inventario.itens[idx].nome,
+                                       p[pos].inventario.itens[idx].espacosGastos,
+                                       p[pos].inventario.itens[idx].bonusAtaque,
+                                       p[pos].inventario.itens[idx].bonusDefesa,
+                                       p[pos].inventario.itens[idx].bonusVida,
+                                       p[pos].inventario.itens[idx].bonusIniciativa,
+                                       p[pos].inventario.itens[idx].poder);
+                            }
+                            else
+                            {
+                                printf("Item com ID %d nao encontrado no inventario!\n", idItem);
+                            }
+                            break;
+                        }
+                        case 3:
+                        {
+                            int idItem;
+                            printf("Digite o ID do item que deseja remover: ");
+                            scanf("%d", &idItem);
+                            removerItemInventario(&p[pos].inventario, idItem, NULL);
+                            break;
+                        }
+                        case 4:
+                            listarInventario(&p[pos].inventario);
+                            break;
+                        case 0:
+                            printf("Retornando ao menu principal...\n");
+                            break;
+                        default:
+                            printf("Digite um numero valido!\n");
+                            break;
+                        }
+                    } while (menuInventario != 0);
                     break;
                 }
-                case 4:
-                    listarInventario(&p[pos].inventario);
+                case 7:
+                {
+                    printf("Qual o ID do personagem para consultar equipamentos? ");
+                    scanf("%d", &id);
+                    int pos = -1;
+                    for (int k = 0; k < quantidade; k++)
+                    {
+                        if (p[k].ID == id) { pos = k; break; }
+                    }
+                    if (pos == -1)
+                    {
+                        printf("Personagem com ID %d nao encontrado!\n", id);
+                        break;
+                    }
+                    exibeEquipamentosPersonagem(&p[pos]);
                     break;
+                }
+                case 8:
+                {
+                    printf("Qual o ID do personagem que vai equipar o item? ");
+                    scanf("%d", &id);
+                    int pos = -1;
+                    for (int k = 0; k < quantidade; k++)
+                    {
+                        if (p[k].ID == id) { pos = k; break; }
+                    }
+                    if (pos == -1)
+                    {
+                        printf("Personagem com ID %d nao encontrado!\n", id);
+                        break;
+                    }
+                    listarInventario(&p[pos].inventario);
+                    if (p[pos].inventario.quantidade > 0)
+                    {
+                        int idItem;
+                        printf("Digite o ID do item que deseja equipar: ");
+                        scanf("%d", &idItem);
+                        exibeEquipamentosPersonagem(&p[pos]);
+                        int slotEquipar;
+                        printf("Digite o numero da posicao onde deseja equipar (1 a 9): ");
+                        scanf("%d", &slotEquipar);
+                        equiparItem(&p[pos], idItem, slotEquipar - 1);
+                    }
+                    break;
+                }
+                case 9:
+                {
+                    printf("Qual o ID do personagem que vai desequipar o item? ");
+                    scanf("%d", &id);
+                    int pos = -1;
+                    for (int k = 0; k < quantidade; k++)
+                    {
+                        if (p[k].ID == id) { pos = k; break; }
+                    }
+                    if (pos == -1)
+                    {
+                        printf("Personagem com ID %d nao encontrado!\n", id);
+                        break;
+                    }
+                    exibeEquipamentosPersonagem(&p[pos]);
+                    int slot;
+                    printf("Digite o numero do slot que deseja desequipar (1 a 9): ");
+                    scanf("%d", &slot);
+                    desequiparItem(&p[pos], slot - 1);
+                    break;
+                }
+                case 10:
+                {
+                    printf("Qual o ID do personagem para exibir atributos totais? ");
+                    scanf("%d", &id);
+                    int pos = -1;
+                    for (int k = 0; k < quantidade; k++)
+                    {
+                        if (p[k].ID == id) { pos = k; break; }
+                    }
+                    if (pos == -1)
+                    {
+                        printf("Personagem com ID %d nao encontrado!\n", id);
+                        break;
+                    }
+                    printf("\n============ ATRIBUTOS TOTAIS (ID %d: %s) ============\n", p[pos].ID, p[pos].nome);
+                    printf("Ataque Total    : %d (Base: %d, Modificador: %+d)\n",
+                           calcularAtaqueTotal(&p[pos]), p[pos].Ataque, calcularAtaqueTotal(&p[pos]) - p[pos].Ataque);
+                    printf("Defesa Total    : %d (Base: %d, Modificador: %+d)\n",
+                           calcularDefesaTotal(&p[pos]), p[pos].Defesa, calcularDefesaTotal(&p[pos]) - p[pos].Defesa);
+                    printf("Iniciativa Total: %d (Base: %d, Modificador: %+d)\n",
+                           calcularIniciativaTotal(&p[pos]), p[pos].Iniciativa, calcularIniciativaTotal(&p[pos]) - p[pos].Iniciativa);
+                    printf("HP Maximo Total : %d (Base: %d, Modificador: %+d) | HP Atual: %d\n",
+                           calcularHPTotal(&p[pos]), p[pos].HP, calcularHPTotal(&p[pos]) - p[pos].HP, p[pos].HPatual);
+                    printf("Poder Total     : %d (Base: %d, Modificador: %+d)\n",
+                           calcularPoderTotal(&p[pos]), p[pos].Poder, calcularPoderTotal(&p[pos]) - p[pos].Poder);
+                    printf("======================================================\n");
+                    break;
+                }
                 case 0:
                     printf("Retornando ao menu principal...\n");
                     break;
                 default:
-                    printf("Digite um numero valido!\n");
+                    printf("Digite um número válido!\n");
                     break;
                 }
-            } while (menuInventario != 0);
+            } while (opcaoPersonagem != 0);
             break;
-        }
-        case 7:
-        {
-            printf("Qual o ID do personagem para consultar equipamentos? ");
-            scanf("%d", &id);
-            int pos = -1;
-            for (int k = 0; k < quantidade; k++)
-            {
-                if (p[k].ID == id) { pos = k; break; }
-            }
-            if (pos == -1)
-            {
-                printf("Personagem com ID %d nao encontrado!\n", id);
-                break;
-            }
-            exibeEquipamentosPersonagem(&p[pos]);
+
+        case 2:
+            printf("\n[Bestiario] Modulo em desenvolvimento...\n");
             break;
-        }
-        case 8:
-        {
-            printf("Qual o ID do personagem que vai equipar o item? ");
-            scanf("%d", &id);
-            int pos = -1;
-            for (int k = 0; k < quantidade; k++)
-            {
-                if (p[k].ID == id) { pos = k; break; }
-            }
-            if (pos == -1)
-            {
-                printf("Personagem com ID %d nao encontrado!\n", id);
-                break;
-            }
-            listarInventario(&p[pos].inventario);
-            if (p[pos].inventario.quantidade > 0)
-            {
-                int idItem;
-                printf("Digite o ID do item que deseja equipar: ");
-                scanf("%d", &idItem);
-                exibeEquipamentosPersonagem(&p[pos]);
-                int slotEquipar;
-                printf("Digite o numero da posicao onde deseja equipar (1 a 9): ");
-                scanf("%d", &slotEquipar);
-                equiparItem(&p[pos], idItem, slotEquipar - 1);
-            }
+
+        case 3:
+            printf("\n[Encontros] Modulo em desenvolvimento...\n");
             break;
-        }
-        case 9:
-        {
-            printf("Qual o ID do personagem que vai desequipar o item? ");
-            scanf("%d", &id);
-            int pos = -1;
-            for (int k = 0; k < quantidade; k++)
-            {
-                if (p[k].ID == id) { pos = k; break; }
-            }
-            if (pos == -1)
-            {
-                printf("Personagem com ID %d nao encontrado!\n", id);
-                break;
-            }
-            exibeEquipamentosPersonagem(&p[pos]);
-            int slot;
-            printf("Digite o numero do slot que deseja desequipar (1 a 9): ");
-            scanf("%d", &slot);
-            desequiparItem(&p[pos], slot - 1);
+
+        case 4:
+            printf("\n[Combate] Modulo em desenvolvimento...\n");
             break;
-        }
-        case 10:
-        {
-            printf("Qual o ID do personagem para exibir atributos totais? ");
-            scanf("%d", &id);
-            int pos = -1;
-            for (int k = 0; k < quantidade; k++)
-            {
-                if (p[k].ID == id) { pos = k; break; }
-            }
-            if (pos == -1)
-            {
-                printf("Personagem com ID %d nao encontrado!\n", id);
-                break;
-            }
-            printf("\n============ ATRIBUTOS TOTAIS (ID %d: %s) ============\n", p[pos].ID, p[pos].nome);
-            printf("Ataque Total    : %d (Base: %d, Modificador: %+d)\n",
-                   calcularAtaqueTotal(&p[pos]), p[pos].Ataque, calcularAtaqueTotal(&p[pos]) - p[pos].Ataque);
-            printf("Defesa Total    : %d (Base: %d, Modificador: %+d)\n",
-                   calcularDefesaTotal(&p[pos]), p[pos].Defesa, calcularDefesaTotal(&p[pos]) - p[pos].Defesa);
-            printf("Iniciativa Total: %d (Base: %d, Modificador: %+d)\n",
-                   calcularIniciativaTotal(&p[pos]), p[pos].Iniciativa, calcularIniciativaTotal(&p[pos]) - p[pos].Iniciativa);
-            printf("HP Maximo Total : %d (Base: %d, Modificador: %+d) | HP Atual: %d\n",
-                   calcularHPTotal(&p[pos]), p[pos].HP, calcularHPTotal(&p[pos]) - p[pos].HP, p[pos].HPatual);
-            printf("Poder Total     : %d (Base: %d, Modificador: %+d)\n",
-                   calcularPoderTotal(&p[pos]), p[pos].Poder, calcularPoderTotal(&p[pos]) - p[pos].Poder);
-            printf("======================================================\n");
-            break;
-        }
+
         case 0:
             printf("Encerrando o programa...\n");
             break;
+
         default:
             printf("Digite um número válido!\n");
             break;
         }
-    } while (valor != 0);
+    } while (opcaoMenuPrincipal != 0);
 
     free(p);
     return 0;
